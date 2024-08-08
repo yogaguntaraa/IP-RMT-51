@@ -112,7 +112,7 @@ class PublicController {
         try {
             const snap = new midtransClient.Snap({
                 // Set to true if you want Production Environment (accept real transaction).
-                isProduction: false,
+                isProduction: true,
                 serverKey: process.env.MIDTRANS_SERVER_KEY
             });
             const { productId } = req.params

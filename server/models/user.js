@@ -11,6 +11,7 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       User.hasMany(models.Product, { foreignKey: "AuthorId" });
+      User.hasMany(models.Order, { foreignKey: "userId" });
     }
   }
   User.init({
@@ -22,20 +23,20 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false,
       unique: {
         args: true,
-        message: "Email already exists",
+        msg: "Email already exists",
       },
       validate: {
         notEmpty: {
           args: true,
-          message: "Email cannot be empty",
+          msg: "Email cannot be empty",
         },
         notNull: {
           args: true,
-          message: "Email cannot be empty",
+          msg: "Email cannot be empty",
         },
         isEmail: {
           args: true,
-          message: "Email format is incorrect",
+          msg: "Email format is incorrect",
         },
       },
     },
@@ -45,15 +46,15 @@ module.exports = (sequelize, DataTypes) => {
       validate: {
         notEmpty: {
           args: true,
-          message: "Password cannot be empty",
+          msg: "Password cannot be empty",
         },
         notNull: {
           args: true,
-          message: "Password cannot be empty",
+          msg: "Password cannot be empty",
         },
         len: {
           args: [5, 255],
-          message: "Password at least 5 characters",
+          msg: "Password at least 5 characters",
         },
       },
     },

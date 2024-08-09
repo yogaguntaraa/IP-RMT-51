@@ -71,11 +71,12 @@ class UserController {
             const [user] = await User.findOrCreate({
                 where: { email: email },
                 defaults: {
-                    username,
+                    username: email,
                     email: email,
                     password: `${Math.random() * 100}`,
                     role: "Customer",
-                    phoneNumber,
+                    phoneNumber: "-"
+            
                 },
             });
 

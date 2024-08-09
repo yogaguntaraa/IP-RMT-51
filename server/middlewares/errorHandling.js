@@ -16,6 +16,10 @@ module.exports = function errorHandling(err, req, res, next) {
             status = 400;
             message = "Image is required";
             break;
+        case "Order already paid":
+            status = 400;
+            message = "Order already paid";
+            break;
         case "Unauthorized":
         case "JsonWebTokenError":
             status = 401;

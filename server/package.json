@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "jest --watchAll --runInBand --detectOpenHandles --forceExit --verbose --coverage",
+    "test": "jest --watchAll --runInBand --detectOpenHandles --forceExit --verbose --silent --coverage",
     "dev": "nodemon bin/www"
   },
   "keywords": [],

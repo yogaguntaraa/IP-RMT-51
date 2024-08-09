@@ -112,7 +112,7 @@ class PublicController {
         try {
             const snap = new midtransClient.Snap({
                 // Set to true if you want Production Environment (accept real transaction).
-                isProduction: true,
+                isProduction: false,
                 serverKey: process.env.MIDTRANS_SERVER_KEY
             });
             const { productId } = req.params
@@ -149,7 +149,7 @@ class PublicController {
             })
 
 
-            res.json({ message: "Order created", transactionToken })
+            res.json({ message: "Order created", transactionToken, orderId })
         } catch (err) {
             next(err)
         }
@@ -160,19 +160,29 @@ class PublicController {
         try {
             const { orderId } = req.body
             const order = await Order.findOne({ where: { orderId } })
+            // console.log(order, "ini order")
             if (!order) {
                 throw { name: "NotFound" }
+            }
+            if (order.status === "paid") {
+                throw { name: "Order already paid" }
             }
 
             const serverKey = "SB-Mid-server-U9B4hcpiB96TddwBqcP8wsZL".toString("base64");
             const base64ServerKey = Buffer.from(serverKey + ":").toString("base64");
-            const response = await axios.get(`https://api.sandbox.midtrans.com/v2/${orderId}/status`, {
+            const { data } = await axios.get(`https://api.sandbox.midtrans.com/v2/${orderId}/status`, {
                 headers: {
                     Authorization: `Basic ${base64ServerKey}`
                 }
             })
+            if (data.transaction_status === "capture" && data.status_code === "200") {
+                await order.update({ status: "paid", paidDate: new Date() });
+                res.json({ message: "payment success" })
+            } else {
+                res.json({ message: "payment failed"})
+            }
             console.log(response.data)
-            res.json({ message: "payment success" })
+           
         } catch (err) {
             next(err)
         }
